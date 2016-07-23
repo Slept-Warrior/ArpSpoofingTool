@@ -71,7 +71,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="struct.cs" />
     <EmbeddedResource Include="AttackList.resx">
       <DependentUpon>AttackList.cs</DependentUpon>
     </EmbeddedResource>

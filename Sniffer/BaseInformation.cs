@@ -15,7 +15,7 @@ namespace Sniffer
         static public string targetIpAddress;
         static public string targetMacAddress;
         static public ICaptureDevice captureDevice;
-        public void getDefaultGateway()
+        public void getDefaultGateway()     //게이트웨이의 IP와 MAC 주소를 구해온다.
         {
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in adapters)
