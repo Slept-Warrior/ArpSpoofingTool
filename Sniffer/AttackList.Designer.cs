@@ -29,83 +29,114 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.dataGridView = new System.Windows.Forms.DataGridView();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dataGridView_Host_List = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btn_startArpSpoof = new System.Windows.Forms.Button();
-            this.btn_start_scan = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.btn_Start_ArpSpoof = new System.Windows.Forms.Button();
+            this.btn_Start_Scan = new System.Windows.Forms.Button();
+            this.dataGridView_Attack_List = new System.Windows.Forms.DataGridView();
+            this.btn_Move = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Host_List)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Attack_List)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridView
+            // dataGridView_Host_List
             // 
-            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            this.dataGridView_Host_List.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView_Host_List.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
+            this.dataGridView_Host_List.Location = new System.Drawing.Point(23, 22);
+            this.dataGridView_Host_List.Name = "dataGridView_Host_List";
+            this.dataGridView_Host_List.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView.RowTemplate.Height = 30;
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(1253, 309);
-            this.dataGridView.TabIndex = 2;
+            this.dataGridView_Host_List.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView_Host_List.RowTemplate.Height = 30;
+            this.dataGridView_Host_List.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView_Host_List.Size = new System.Drawing.Size(587, 315);
+            this.dataGridView_Host_List.TabIndex = 2;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.dataGridView);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Controls.Add(this.btn_Move);
+            this.panel1.Controls.Add(this.dataGridView_Host_List);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1253, 309);
+            this.panel1.Size = new System.Drawing.Size(665, 337);
             this.panel1.TabIndex = 3;
             // 
-            // btn_startArpSpoof
+            // btn_Start_ArpSpoof
             // 
-            this.btn_startArpSpoof.AccessibleName = "btn_Select_All";
-            this.btn_startArpSpoof.Location = new System.Drawing.Point(636, 343);
-            this.btn_startArpSpoof.Name = "btn_startArpSpoof";
-            this.btn_startArpSpoof.Size = new System.Drawing.Size(161, 37);
-            this.btn_startArpSpoof.TabIndex = 5;
-            this.btn_startArpSpoof.Text = "공격 시작";
-            this.btn_startArpSpoof.UseVisualStyleBackColor = true;
-            this.btn_startArpSpoof.Click += new System.EventHandler(this.btn_select_Click);
+            this.btn_Start_ArpSpoof.AccessibleName = "btn_Select_All";
+            this.btn_Start_ArpSpoof.Location = new System.Drawing.Point(647, 403);
+            this.btn_Start_ArpSpoof.Name = "btn_Start_ArpSpoof";
+            this.btn_Start_ArpSpoof.Size = new System.Drawing.Size(161, 37);
+            this.btn_Start_ArpSpoof.TabIndex = 5;
+            this.btn_Start_ArpSpoof.Text = "공격 시작";
+            this.btn_Start_ArpSpoof.UseVisualStyleBackColor = true;
+            this.btn_Start_ArpSpoof.Click += new System.EventHandler(this.btn_select_Click);
             // 
-            // btn_start_scan
+            // btn_Start_Scan
             // 
-            this.btn_start_scan.AccessibleName = "btn_Start_Scan";
-            this.btn_start_scan.Location = new System.Drawing.Point(442, 343);
-            this.btn_start_scan.Name = "btn_start_scan";
-            this.btn_start_scan.Size = new System.Drawing.Size(161, 37);
-            this.btn_start_scan.TabIndex = 6;
-            this.btn_start_scan.Text = "스캔 시작";
-            this.btn_start_scan.UseVisualStyleBackColor = true;
-            this.btn_start_scan.Click += new System.EventHandler(this.btn_start_scan_Click);
+            this.btn_Start_Scan.AccessibleName = "btn_Start_Scan";
+            this.btn_Start_Scan.Location = new System.Drawing.Point(449, 403);
+            this.btn_Start_Scan.Name = "btn_Start_Scan";
+            this.btn_Start_Scan.Size = new System.Drawing.Size(161, 37);
+            this.btn_Start_Scan.TabIndex = 6;
+            this.btn_Start_Scan.Text = "스캔 시작";
+            this.btn_Start_Scan.UseVisualStyleBackColor = true;
+            this.btn_Start_Scan.Click += new System.EventHandler(this.btn_start_scan_Click);
+            // 
+            // dataGridView_Attack_List
+            // 
+            this.dataGridView_Attack_List.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView_Attack_List.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
+            this.dataGridView_Attack_List.Location = new System.Drawing.Point(671, 22);
+            this.dataGridView_Attack_List.Name = "dataGridView_Attack_List";
+            this.dataGridView_Attack_List.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            this.dataGridView_Attack_List.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridView_Attack_List.RowTemplate.Height = 30;
+            this.dataGridView_Attack_List.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView_Attack_List.Size = new System.Drawing.Size(584, 315);
+            this.dataGridView_Attack_List.TabIndex = 3;
+            // 
+            // btn_Move
+            // 
+            this.btn_Move.Location = new System.Drawing.Point(616, 153);
+            this.btn_Move.Name = "btn_Move";
+            this.btn_Move.Size = new System.Drawing.Size(48, 43);
+            this.btn_Move.TabIndex = 3;
+            this.btn_Move.Text = "->";
+            this.btn_Move.UseVisualStyleBackColor = true;
+            this.btn_Move.Click += new System.EventHandler(this.btn_Move_Click);
             // 
             // AttackList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1253, 423);
-            this.Controls.Add(this.btn_start_scan);
-            this.Controls.Add(this.btn_startArpSpoof);
+            this.ClientSize = new System.Drawing.Size(1301, 452);
+            this.Controls.Add(this.dataGridView_Attack_List);
+            this.Controls.Add(this.btn_Start_Scan);
+            this.Controls.Add(this.btn_Start_ArpSpoof);
             this.Controls.Add(this.panel1);
             this.Name = "AttackList";
             this.Text = "AttackList";
             this.Load += new System.EventHandler(this.AttackList_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Host_List)).EndInit();
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Attack_List)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.DataGridView dataGridView_Host_List;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btn_startArpSpoof;
-        private System.Windows.Forms.Button btn_start_scan;
+        private System.Windows.Forms.Button btn_Start_ArpSpoof;
+        private System.Windows.Forms.Button btn_Start_Scan;
+        private System.Windows.Forms.DataGridView dataGridView_Attack_List;
+        private System.Windows.Forms.Button btn_Move;
 
     }
 }

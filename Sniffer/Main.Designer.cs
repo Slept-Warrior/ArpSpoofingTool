@@ -28,48 +28,57 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btn_capture_option = new System.Windows.Forms.Button();
+            this.btn_Capture_Option = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btn_capture_start = new System.Windows.Forms.Button();
+            this.btn_Arp_Attack = new System.Windows.Forms.Button();
+            this.btn_Capture_Start = new System.Windows.Forms.Button();
             this.listView = new System.Windows.Forms.ListView();
-            this.btn_arp_attack = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btn_capture_option
+            // btn_Capture_Option
             // 
-            this.btn_capture_option.Location = new System.Drawing.Point(159, 0);
-            this.btn_capture_option.Name = "btn_capture_option";
-            this.btn_capture_option.Size = new System.Drawing.Size(37, 36);
-            this.btn_capture_option.TabIndex = 0;
-            this.btn_capture_option.Text = "D";
-            this.btn_capture_option.UseVisualStyleBackColor = true;
-            this.btn_capture_option.Click += new System.EventHandler(this.btn_capture_option_Click);
+            this.btn_Capture_Option.Location = new System.Drawing.Point(159, 0);
+            this.btn_Capture_Option.Name = "btn_Capture_Option";
+            this.btn_Capture_Option.Size = new System.Drawing.Size(37, 36);
+            this.btn_Capture_Option.TabIndex = 0;
+            this.btn_Capture_Option.Text = "D";
+            this.btn_Capture_Option.UseVisualStyleBackColor = true;
+            this.btn_Capture_Option.Click += new System.EventHandler(this.btn_capture_option_Click);
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.btn_arp_attack);
-            this.panel1.Controls.Add(this.btn_capture_start);
-            this.panel1.Controls.Add(this.btn_capture_option);
+            this.panel1.Controls.Add(this.btn_Arp_Attack);
+            this.panel1.Controls.Add(this.btn_Capture_Start);
+            this.panel1.Controls.Add(this.btn_Capture_Option);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1187, 54);
             this.panel1.TabIndex = 2;
             // 
-            // btn_capture_start
+            // btn_Arp_Attack
             // 
-            this.btn_capture_start.Location = new System.Drawing.Point(3, 3);
-            this.btn_capture_start.Name = "btn_capture_start";
-            this.btn_capture_start.Size = new System.Drawing.Size(37, 36);
-            this.btn_capture_start.TabIndex = 1;
-            this.btn_capture_start.Text = "S";
-            this.btn_capture_start.UseVisualStyleBackColor = true;
-            this.btn_capture_start.Click += new System.EventHandler(this.btn_capture_start_Click);
+            this.btn_Arp_Attack.Location = new System.Drawing.Point(116, 0);
+            this.btn_Arp_Attack.Name = "btn_Arp_Attack";
+            this.btn_Arp_Attack.Size = new System.Drawing.Size(37, 36);
+            this.btn_Arp_Attack.TabIndex = 2;
+            this.btn_Arp_Attack.Text = "L";
+            this.btn_Arp_Attack.UseVisualStyleBackColor = true;
+            this.btn_Arp_Attack.Click += new System.EventHandler(this.btn_arp_attack_Click);
+            // 
+            // btn_Capture_Start
+            // 
+            this.btn_Capture_Start.Location = new System.Drawing.Point(3, 3);
+            this.btn_Capture_Start.Name = "btn_Capture_Start";
+            this.btn_Capture_Start.Size = new System.Drawing.Size(37, 36);
+            this.btn_Capture_Start.TabIndex = 1;
+            this.btn_Capture_Start.Text = "S";
+            this.btn_Capture_Start.UseVisualStyleBackColor = true;
+            this.btn_Capture_Start.Click += new System.EventHandler(this.btn_capture_start_Click);
             // 
             // listView
             // 
-
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.FullRowSelect = true;
             this.listView.Location = new System.Drawing.Point(0, 54);
@@ -78,16 +87,6 @@
             this.listView.TabIndex = 3;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
-            // 
-            // btn_arp_attack
-            // 
-            this.btn_arp_attack.Location = new System.Drawing.Point(116, 0);
-            this.btn_arp_attack.Name = "btn_arp_attack";
-            this.btn_arp_attack.Size = new System.Drawing.Size(37, 36);
-            this.btn_arp_attack.TabIndex = 2;
-            this.btn_arp_attack.Text = "L";
-            this.btn_arp_attack.UseVisualStyleBackColor = true;
-            this.btn_arp_attack.Click += new System.EventHandler(this.btn_arp_attack_Click);
             // 
             // Main
             // 
@@ -105,11 +104,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_capture_option;
+        private System.Windows.Forms.Button btn_Capture_Option;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btn_capture_start;
+        private System.Windows.Forms.Button btn_Capture_Start;
         private System.Windows.Forms.ListView listView;
-        private System.Windows.Forms.Button btn_arp_attack;
+        private System.Windows.Forms.Button btn_Arp_Attack;
     }
 }
 
