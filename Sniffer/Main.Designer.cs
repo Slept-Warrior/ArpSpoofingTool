@@ -31,8 +31,9 @@
             this.btn_Capture_Option = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btn_Arp_Attack = new System.Windows.Forms.Button();
-            this.btn_Capture_Start = new System.Windows.Forms.Button();
+            this.btn_HackCookie_Start = new System.Windows.Forms.Button();
             this.listView = new System.Windows.Forms.ListView();
+            this.btn_reply = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,8 +49,9 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btn_reply);
             this.panel1.Controls.Add(this.btn_Arp_Attack);
-            this.panel1.Controls.Add(this.btn_Capture_Start);
+            this.panel1.Controls.Add(this.btn_HackCookie_Start);
             this.panel1.Controls.Add(this.btn_Capture_Option);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -67,15 +69,15 @@
             this.btn_Arp_Attack.UseVisualStyleBackColor = true;
             this.btn_Arp_Attack.Click += new System.EventHandler(this.btn_arp_attack_Click);
             // 
-            // btn_Capture_Start
+            // btn_HackCookie_Start
             // 
-            this.btn_Capture_Start.Location = new System.Drawing.Point(3, 3);
-            this.btn_Capture_Start.Name = "btn_Capture_Start";
-            this.btn_Capture_Start.Size = new System.Drawing.Size(37, 36);
-            this.btn_Capture_Start.TabIndex = 1;
-            this.btn_Capture_Start.Text = "S";
-            this.btn_Capture_Start.UseVisualStyleBackColor = true;
-            this.btn_Capture_Start.Click += new System.EventHandler(this.btn_capture_start_Click);
+            this.btn_HackCookie_Start.Location = new System.Drawing.Point(3, 3);
+            this.btn_HackCookie_Start.Name = "btn_HackCookie_Start";
+            this.btn_HackCookie_Start.Size = new System.Drawing.Size(37, 36);
+            this.btn_HackCookie_Start.TabIndex = 1;
+            this.btn_HackCookie_Start.Text = "S";
+            this.btn_HackCookie_Start.UseVisualStyleBackColor = true;
+            this.btn_HackCookie_Start.Click += new System.EventHandler(this.btn_capture_start_Click);
             // 
             // listView
             // 
@@ -87,6 +89,16 @@
             this.listView.TabIndex = 3;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
+            // 
+            // btn_reply
+            // 
+            this.btn_reply.Location = new System.Drawing.Point(73, 0);
+            this.btn_reply.Name = "btn_reply";
+            this.btn_reply.Size = new System.Drawing.Size(37, 36);
+            this.btn_reply.TabIndex = 3;
+            this.btn_reply.Text = "R";
+            this.btn_reply.UseVisualStyleBackColor = true;
+            this.btn_reply.Click += new System.EventHandler(this.btn_reply_Click);
             // 
             // Main
             // 
@@ -106,9 +118,10 @@
 
         private System.Windows.Forms.Button btn_Capture_Option;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btn_Capture_Start;
+        private System.Windows.Forms.Button btn_HackCookie_Start;
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.Button btn_Arp_Attack;
+        private System.Windows.Forms.Button btn_reply;
     }
 }
 

