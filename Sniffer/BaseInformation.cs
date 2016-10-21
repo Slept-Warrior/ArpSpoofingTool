@@ -66,13 +66,11 @@ namespace Sniffer
         {
             int readTimeout = 1000;
 
-            // 현재 단말기의 네트워크 장치의 리스트들을 불러온다.
-
-            // 무선 랜카드의 인덱스 번호는 1번(단말기 설정에 따라 다름)
+            // The index number of the wireless LAN card #1 (depends on device settings) 
             ICaptureDevice device = BaseInformation.captureDevice;
 
 
-            // 무선 랜카드를 프러미스큐어스 모드로 연다.
+            // Open the LAN card in Promiscuous mode.
             device.Open(DeviceMode.Promiscuous, readTimeout);
             IPAddress myIP = null;
             IPAddress gatewayIP = null;
@@ -83,10 +81,10 @@ namespace Sniffer
             EtherArpRequestMac = PhysicalAddress.Parse(BaseInformation.EtherMacAddressForArpRequest.ToUpper());
             ArpRequestMac = PhysicalAddress.Parse(BaseInformation.ArpMacAddressForArpRequest.ToUpper());
             myIP = IPAddress.Parse(BaseInformation.myIpAddress); 
-            gatewayIP = IPAddress.Parse(BaseInformation.gatewayIP); //아이피에 게이트웨이 주소를 넣어주어야 한다.
+            gatewayIP = IPAddress.Parse(BaseInformation.gatewayIP); 
             srcMac = PhysicalAddress.Parse(BaseInformation.myMacAddress.ToUpper());
 
-            //타겟 Infection
+            //Target ARP Infection
 
             EthernetPacket eth = new EthernetPacket(srcMac, EtherArpRequestMac, EthernetPacketType.Arp);
             ARPPacket arp = new ARPPacket(ARPOperation.Request, ArpRequestMac, gatewayIP, srcMac, myIP);
