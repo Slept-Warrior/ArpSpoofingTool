@@ -71,7 +71,7 @@
             this.btn_Start_ArpSpoof.Name = "btn_Start_ArpSpoof";
             this.btn_Start_ArpSpoof.Size = new System.Drawing.Size(161, 37);
             this.btn_Start_ArpSpoof.TabIndex = 5;
-            this.btn_Start_ArpSpoof.Text = "공격 시작";
+            this.btn_Start_ArpSpoof.Text = "Start Attack";
             this.btn_Start_ArpSpoof.UseVisualStyleBackColor = true;
             this.btn_Start_ArpSpoof.Click += new System.EventHandler(this.btn_select_Click);
             // 
@@ -82,7 +82,7 @@
             this.btn_Start_Scan.Name = "btn_Start_Scan";
             this.btn_Start_Scan.Size = new System.Drawing.Size(161, 37);
             this.btn_Start_Scan.TabIndex = 6;
-            this.btn_Start_Scan.Text = "스캔 시작";
+            this.btn_Start_Scan.Text = "Scan";
             this.btn_Start_Scan.UseVisualStyleBackColor = true;
             this.btn_Start_Scan.Click += new System.EventHandler(this.btn_start_scan_Click);
             // 
